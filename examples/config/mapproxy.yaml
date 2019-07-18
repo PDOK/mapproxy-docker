@@ -1,0 +1,11 @@
+# -------------------------------
+# MapProxy configuration.
+# -------------------------------
+services:
+  demo:
+
+globals:
+  cache:
+    base_dir: '/srv/mapproxy/cache_data'
+    lock_dir: '/srv/mapproxy/cache_data/locks'
+    tile_lock_dir: '/srv/mapproxy/cache_data/tile_locks'

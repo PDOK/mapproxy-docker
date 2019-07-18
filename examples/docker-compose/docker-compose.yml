@@ -1,0 +1,52 @@
+version: '2.1'
+services:
+  mapproxy:
+    image: pdok/mapproxy
+    restart: unless-stopped    
+    command: ["bash", "-c","uwsgi --ini /srv/mapproxy/config/uwsgi.ini"]
+    environment:
+     - UWSGI_PROCESSES=1
+     - UWSGI_THREADS=16
+     - UWSGI_CHDIR=/srv/mapproxy/config
+     - UWSGI_PYARGV=/srv/mapproxy/config/mapproxy.yaml
+     - UWSGI_WSGI_FILE=/srv/mapproxy/config/config.py      
+    labels:
+      nl.pdok.application.group: "mapproxy"
+      SERVICE_CHECK_HTTP: "/"
+      SERVICE_NAME: demo-mapproxy
+    volumes:
+      - ./../config:/srv/mapproxy/config
+      - demo:/tmp/
+    networks:
+      mapproxy-exporter:
+  lighttpd:
+    image: pdok/lighttpd
+    restart: unless-stopped    
+    command: ["ash", "-c","lighttpd -D -f /srv/lighttpd/lighttpd.conf"]
+    ports:
+      - 80:80
+    labels:
+      nl.pdok.application.group: "lighttpd"
+      SERVICE_CHECK_HTTP: "/"
+      SERVICE_NAME: demo-lighttpd
+    volumes:
+      - ./../config:/srv/lighttpd
+      - demo:/tmp/
+    networks:
+      mapproxy-exporter:
+  exporter:
+    image: lusotycoon/apache-exporter:v0.7.0
+    restart: unless-stopped
+    command: ["-scrape_uri=http://admin:admin@lighttpd/server-status?auto"]
+    ports:
+      - 9117:9117
+    labels:
+      nl.pdok.application.group: "exporter"
+      SERVICE_CHECK_HTTP: "/"
+      SERVICE_NAME: demo-exporter
+    networks:
+      mapproxy-exporter:        
+volumes:
+  demo:
+networks:
+  mapproxy-exporter:
