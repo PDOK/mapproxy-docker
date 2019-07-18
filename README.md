@@ -25,21 +25,6 @@ Regarding the second need, finding a usable Mapproxy Docker image is a challenge
 
 It will create an Mapproxy application that is easy to use. The only thing required to do is to add you own mapproxy.yaml configuration.
 
-## Docker image
-
-The Docker image contains 2 stages:
-
-1. builder
-2. service
-
-### builder
-
-The builder stage compiles Mapserver. The Dockerfile contains all the available Mapserver build option explicitly, so it is clear which options are enabled and disabled.
-
-### service
-
-The service stage copies the Mapserver application, build in the first stage the service stage, and configures Lighttpd & the epsg file.
-
 ## Usage
 
 ### Build
@@ -50,10 +35,10 @@ docker build -t pdok/mapproxy .
 
 ### Run
 
-This image can be run straight from the commandline. A volumn needs to be mounted on the container directory /srv/data. The mounted volumn needs to contain at least one mapserver *.map file. The name of the mapfile will determine the URL path for the service.
+This image can be run straight from the commandline. A volumn needs to be mounted on the container directory /srv/mapproxy/config.
 
 ```docker
-docker run -d -p 80:80 --name mapserver-example -v `pwd`/examples/config:/srv/mapproxy/config pdok/mapserver
+docker run -d -p 80:80 --name mapproxy-example -v `pwd`/examples/config:/srv/mapproxy/config pdok/mapproxy
 ```
 
 Running the example above will start a empty mapproxy. On the url <http://localhost/demo> the test page can be accessed. Replacing the example mapproxy.yaml with your own will start a mapproxy with that configuration.
