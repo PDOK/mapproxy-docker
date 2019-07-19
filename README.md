@@ -1,7 +1,7 @@
 # mapproxy-docker
 
 ![GitHub release](https://img.shields.io/github/release/PDOK/mapproxy-docker.svg)
-![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapproxy.svg?maxAge=604800)
+![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapproxy.svg)
 
 ## TL;DR
 
@@ -15,18 +15,11 @@ docker rm mapproxy-example
 
 ## Introduction
 
-This project aims to fulfill two needs:
-
-1. create a [OGC services](http://www.opengeospatial.org/standards) that are deployable on a scalable infrastructure.
-2. create a useable [Docker](https://www.docker.com) base image.
-
-Fulfilling the first need the main purpose is to create an Docker base image that eventually can be run on a platform like [Kubernetes](https://kubernetes.io/).
-
-Regarding the second need, finding a usable Mapproxy Docker image is a challenge. Most image rely on old versions of Mapproxy and or Python.
+This project aims to fulfill the need for creating a [Docker](https://www.docker.com) base image that can be used in a scalable infrastructure like [Kubernetes](https://kubernetes.io/) and still is easy to use with a single docker run command. That's why we created this docker images containing in which we don't COPY config during the docker build and include "pip install ..  gunicorn uwsgi .."
 
 ## What will it do
 
-It will create an Mapproxy application that is easy to use. The only thing required to do is to add you own mapproxy.yaml configuration.
+In it simplist form it will create an Mapproxy application that is easy to use. The only thing required is to add you own mapproxy.yaml configuration. For more complex deployments like docker-compose and/or kubernetes it will provide a starting point in creating multi-container/pods deployments.
 
 ## Usage
 
@@ -45,3 +38,11 @@ docker run -d -p 80:80 --name mapproxy-example -v `pwd`/examples/config:/srv/map
 ```
 
 Running the example above will start a empty mapproxy. On the url <http://localhost/demo> the test page can be accessed. Replacing the example mapproxy.yaml with your own will start a mapproxy with that configuration.
+
+## Docker-compose
+
+The docker-compose example file can be found [here](/examples/docker-compose).
+
+## Kubernetes
+
+The kubernetes example deployment can be found [here](/examples/k8s).
