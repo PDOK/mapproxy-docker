@@ -1,7 +1,7 @@
 # mapproxy-docker
 
-[![GitHub release](https://img.shields.io/github/release/PDOK/mapproxy-docker.svg)][release]
-[![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapproxy.svg?maxAge=604800)][hub]
+![GitHub release](https://img.shields.io/github/release/PDOK/mapproxy-docker.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapproxy.svg?maxAge=604800)
 
 ## TL;DR
 
