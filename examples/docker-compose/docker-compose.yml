@@ -22,7 +22,7 @@ services:
   lighttpd:
     image: pdok/lighttpd
     restart: unless-stopped    
-    command: ["ash", "-c","lighttpd -D -f /srv/lighttpd/lighttpd.conf"]
+    command: ["bash", "-c","lighttpd -D -f /srv/lighttpd/lighttpd.conf"]
     ports:
       - 80:80
     labels:
