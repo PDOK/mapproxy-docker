@@ -18,7 +18,7 @@ RUN apt-get -y update \
                git \
     && rm -rf /var/lib/apt/lists/* 
 
-RUN pip install PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client
+RUN pip install numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client
 # master for the 1.12-alpha
 RUN pip install git+https://github.com/mapproxy/mapproxy.git@master
 
@@ -28,6 +28,9 @@ RUN groupadd -g 1337 mapproxy \
     && usermod -a -G sudo mapproxy
 
 RUN apt-get clean
+
+RUN mkdir -p /srv/mapproxy/cache_data
+RUN chmod a+rwx /srv/mapproxy/cache_data
 
 WORKDIR /srv/mapproxy
 
