@@ -19,7 +19,7 @@ This project aims to fulfill the need for creating a [Docker](https://www.docker
 
 ## What will it do
 
-In it simplist form it will create an Mapproxy application that is easy to use. The only thing required is to add you own mapproxy.yaml configuration. For more complex deployments like docker-compose and/or kubernetes it will provide a starting point in creating multi-container/pods deployments.
+In it simplist form it will create an [Mapproxy](https://mapproxy.org/) application that is easy to use. The only thing required is to add you own mapproxy.yaml configuration. For more complex deployments like docker-compose and/or kubernetes it will provide a starting point in creating multi-container/pods deployments.
 
 ## Usage
 
