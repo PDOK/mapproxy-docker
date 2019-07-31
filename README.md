@@ -1,5 +1,6 @@
 # mapproxy-docker
 
+![GitHub license](https://img.shields.io/github/license/PDOK/mapproxy-docker)
 ![GitHub release](https://img.shields.io/github/release/PDOK/mapproxy-docker.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapproxy.svg)
 
