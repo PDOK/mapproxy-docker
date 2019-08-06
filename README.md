@@ -3,6 +3,7 @@
 ![GitHub license](https://img.shields.io/github/license/PDOK/mapproxy-docker)
 ![GitHub release](https://img.shields.io/github/release/PDOK/mapproxy-docker.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapproxy.svg)
+![Go report](https://goreportcard.com/badge/github.com/pdok/wmts-kvp-to-restful)
 
 ## TL;DR
 
