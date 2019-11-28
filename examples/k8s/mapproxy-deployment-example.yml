@@ -17,7 +17,7 @@ spec:
     spec:
       containers:      
         - name: mapproxy
-          image: pdok/mapproxy:1.12alpha
+          image: pdok/mapproxy:1.12
           imagePullPolicy: Always
           command: ["bash", "-c"]     
           args: ["uwsgi --ini /srv/mapproxy/config/uwsgi.ini"]
@@ -46,7 +46,7 @@ spec:
             mountPath: /tmp
             readOnly: false            
         - name: lighttpd
-          image: pdok/lighttpd:1.4
+          image: pdok/lighttpd:1.4-1
           command: ["lighttpd"]
           args: ["-D", "-f", "/srv/lighttpd/lighttpd.conf"]        
           imagePullPolicy: Always
