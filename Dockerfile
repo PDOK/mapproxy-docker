@@ -1,4 +1,4 @@
-FROM python:3.7-slim-stretch
+FROM python:3.7-slim-buster
 LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 RUN apt-get -y update \
@@ -7,20 +7,19 @@ RUN apt-get -y update \
                python-yaml \
                python-lxml \
                python-shapely \
-               python-imaging \
                python-virtualenv \
                python-pip \
                libpcre3 \
                libpcre3-dev \
-               libproj12 \
+               libproj13 \
                libgeos-c1v5 \
                libgdal20 \
                git \
     && rm -rf /var/lib/apt/lists/* 
 
 RUN pip install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client
-# master for the 1.12-alpha
-RUN pip install git+https://github.com/mapproxy/mapproxy.git@master
+# 1.12.0
+RUN pip install git+https://github.com/mapproxy/mapproxy.git@1.12.0
 
 # when overwriting the CMD with a uwsgi command it's good practice to not run it as root
 RUN groupadd -g 1337 mapproxy \
