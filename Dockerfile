@@ -1,13 +1,9 @@
 FROM debian:buster-slim
 LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
+# apt-get python3-pip on debian:buster will install python3.7
 RUN apt-get -y update \
     && apt-get install -y \
-               python3-pil \
-               python3-yaml \
-               python3-lxml \
-               python3-shapely \
-               python3-virtualenv \
                python3-pip \
                libpcre3 \
                libpcre3-dev \
