@@ -8,10 +8,9 @@
 
 ```docker
 docker build -t pdok/mapproxy .
-docker run -d -p 80:80 --name mapproxy-example -v `pwd`/examples/config:/srv/mapproxy/config pdok/mapproxy
+docker run --rm -d -p 80:80 --name mapproxy-example -v `pwd`/examples/config:/srv/mapproxy/config pdok/mapproxy
 
 docker stop mapproxy-example
-docker rm mapproxy-example
 ```
 
 ## Introduction
