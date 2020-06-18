@@ -17,7 +17,7 @@ spec:
     spec:
       containers:      
         - name: mapproxy
-          image: pdok/mapproxy:1.12
+          image: pdok/mapproxy
           imagePullPolicy: Always
           command: ["bash", "-c"]     
           args: ["uwsgi --ini /srv/mapproxy/config/uwsgi.ini"]
