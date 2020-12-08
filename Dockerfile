@@ -14,8 +14,8 @@ RUN apt-get -y update \
     && rm -rf /var/lib/apt/lists/* 
 
 RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml
-# 1.12.0
-RUN pip3 install git+https://github.com/mapproxy/mapproxy.git@1.12.0
+# 1.13.0
+RUN pip3 install git+https://github.com/mapproxy/mapproxy.git@1.13.0
 
 # when overwriting the CMD with a uwsgi command it's good practice to not run it as root
 RUN groupadd -g 1337 mapproxy \
