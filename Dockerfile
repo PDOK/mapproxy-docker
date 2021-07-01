@@ -11,6 +11,7 @@ RUN apt-get -y update \
                libgeos-c1v5 \
                libgdal20 \
                git \
+               wget \
     && rm -rf /var/lib/apt/lists/* 
 
 RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml
