@@ -14,7 +14,7 @@ RUN apt-get -y update \
                wget \
     && rm -rf /var/lib/apt/lists/* 
 
-RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml 'pyproj==1.9.6'
+RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml
 # 1.13.0
 RUN pip3 install git+https://github.com/mapproxy/mapproxy.git@1.13.0
 
