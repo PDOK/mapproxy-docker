@@ -18,7 +18,7 @@ RUN apt-get -y update \
 
 RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml azure-storage-blob
 # use the PDOK fork of MapProxy. This is MapProxy version 1.13.1 but patched with https://github.com/mapproxy/mapproxy/pull/608
-RUN pip3 install git+https://github.com/PDOK/mapproxy.git@1.13.1-pdok-patched
+RUN pip3 install git+https://github.com/PDOK/mapproxy.git@pdok-1.13.2-patched-1
 
 # when overwriting the CMD with a uwsgi command it's good practice to not run it as root
 RUN groupadd -g 1337 mapproxy \
