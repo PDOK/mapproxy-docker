@@ -12,11 +12,13 @@ RUN apt-get -y update \
                libgdal20 \
                git \
                wget \
-    && rm -rf /var/lib/apt/lists/* 
+               zlib1g-dev \
+               libjpeg-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml
-# 1.13.0
-RUN pip3 install git+https://github.com/mapproxy/mapproxy.git@1.13.0
+RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml azure-storage-blob
+# use the PDOK fork of MapProxy. This is MapProxy version 1.13.1 but patched with https://github.com/mapproxy/mapproxy/pull/608
+RUN pip3 install git+https://github.com/PDOK/mapproxy.git@pdok-1.13.2-patched-1
 
 # when overwriting the CMD with a uwsgi command it's good practice to not run it as root
 RUN groupadd -g 1337 mapproxy \
