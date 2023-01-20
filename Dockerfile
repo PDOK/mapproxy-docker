@@ -1,22 +1,22 @@
-FROM debian:buster-slim
+FROM debian:bullseye-20230109-slim
 LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
-# apt-get python3-pip on debian:buster will install python3.7
+# apt-get python3-pip on debian:bullseye will install python3.9.2
 RUN apt-get -y update \
     && apt-get install -y \
                python3-pip \
                libpcre3 \
                libpcre3-dev \
-               libproj13 \
+               libproj19 \
                libgeos-c1v5 \
-               libgdal20 \
+               libgdal28 \
                git \
                wget \
                zlib1g-dev \
                libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml azure-storage-blob
+RUN pip3 install pyproj Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml azure-storage-blob
 # use the PDOK fork of MapProxy. This is MapProxy version 1.13.1 but patched with https://github.com/mapproxy/mapproxy/pull/608
 RUN pip3 install git+https://github.com/PDOK/mapproxy.git@pdok-1.13.2-patched-1
 
