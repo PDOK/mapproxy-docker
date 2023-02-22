@@ -8,7 +8,7 @@ RUN apt-get -y update \
                libpcre3 \
                libpcre3-dev \
                libproj13 \
-               libgeos-c1v5 \
+               libgeos-dev \
                libgdal20 \
                git \
                wget \
