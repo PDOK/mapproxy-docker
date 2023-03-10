@@ -1,6 +1,6 @@
 # k8s
 
-K8s example running mapproxy demo as a uwsgi application with lighttpd as webserver exposing a prometheus metrics end-point.
+K8s example running mapproxy demo exposing a prometheus metrics end-point.
 
 ## TL;DR
 
