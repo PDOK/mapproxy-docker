@@ -17,10 +17,14 @@ spec:
     spec:
       containers:
         - name: mapproxy
-          image: local-registry:5000/mapproxy:test-1
+          image: pdok/mapproxy
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
           env:
             - name: DEBUG
               value: "1"
