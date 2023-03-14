@@ -1,6 +1,6 @@
 # docker-compose
 
-Docker-compose example running mapproxy demo as a uwsgi application with lighttpd as webserver exposing a prometheus metrics end-point.
+Docker-compose example running mapproxy demo exposing a prometheus metrics end-point.
 
 ## TL;DR
 
@@ -11,6 +11,6 @@ docker-compose down
 
 ## endpoints
 
-- <http://localhost/mapproxy/demo/>
-- <http://localhost/server-status>
+- <http://localhost:8080/mapproxy/demo/>
+- <http://localhost:8080/server-status>
 - <http://localhost:9117/metrics>

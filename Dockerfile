@@ -1,5 +1,7 @@
-FROM debian:buster-slim
+FROM pdok/lighttpd:1.4.67
 LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
+
+USER root
 
 # apt-get python3-pip on debian:buster will install python3.7
 RUN apt-get -y update \
@@ -16,14 +18,9 @@ RUN apt-get -y update \
                libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml azure-storage-blob
+RUN pip3 install flup Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml azure-storage-blob pyproj==2.2.0
 # use the PDOK fork of MapProxy. This is MapProxy version 1.13.1 but patched with https://github.com/mapproxy/mapproxy/pull/608
 RUN pip3 install git+https://github.com/PDOK/mapproxy.git@pdok-1.13.2-patched-2
-
-# when overwriting the CMD with a uwsgi command it's good practice to not run it as root
-RUN groupadd -g 1337 mapproxy \
-    && useradd --shell /bin/bash --gid 1337 -m mapproxy \
-    && usermod -a -G sudo mapproxy
 
 RUN apt-get clean
 
@@ -33,6 +30,21 @@ RUN chmod a+rwx /srv/mapproxy/cache_data
 
 WORKDIR /srv/mapproxy
 
+ADD config/lighttpd.conf /srv/mapproxy/config/lighttpd.conf
+ADD config/include.conf /srv/mapproxy/config/include.conf
+ADD config/log.ini /srv/mapproxy/config/log.ini
+
+ADD config/start.py /srv/mapproxy/start.py
+RUN chmod +x start.py
+
+USER www
+
+ENV DEBUG 0
+ENV MIN_PROCS 4
+ENV MAX_PROCS 8
+ENV MAX_LOAD_PER_PROC 1
+ENV IDLE_TIMEOUT 20
+
 EXPOSE 80
 
-CMD gunicorn -k gthread --user=1337 --group=1337 --chdir /srv/mapproxy/config --threads=16 --workers=1 -b :80 config:application --no-sendfile --access-logfile '-' --error-logfile '-'
+CMD ["lighttpd", "-D", "-f", "/srv/mapproxy/config/lighttpd.conf"]

@@ -15,134 +15,87 @@ spec:
         app: mapproxy-example
     annotations:
     spec:
-      containers:      
+      containers:
         - name: mapproxy
           image: pdok/mapproxy
           imagePullPolicy: Always
-          command: ["bash", "-c"]     
-          args: ["uwsgi --ini /srv/mapproxy/config/uwsgi.ini"]
+          ports:
+            - containerPort: 80
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
           env:
-          - name: UWSGI_PROCESSES
-            value: "1"
-          - name: UWSGI_THREADS
-            value: "16"
-          - name: UWSGI_CHDIR
-            value: "/srv/mapproxy/config"
-          - name: UWSGI_PYARGV
-            value: "/srv/mapproxy/config/mapproxy.yaml"
-          - name: UWSGI_WSGI_FILE
-            value: "/srv/mapproxy/config/config.py"
+            - name: DEBUG
+              value: "1"
           resources:
             limits:
               memory: 2G
-              cpu: 1
             requests:
-              memory: 1G
-              cpu: 0.5           
+              cpu: 0.5
           volumeMounts:
-          - name: mapproxy
-            mountPath: /srv/mapproxy/config
-          - name: socket
-            mountPath: /tmp
-            readOnly: false            
-        - name: lighttpd
-          image: pdok/lighttpd:1.4-1
-          command: ["lighttpd"]
-          args: ["-D", "-f", "/srv/lighttpd/lighttpd.conf"]        
-          imagePullPolicy: Always
-          ports:
-          - containerPort: 80
-          resources:
-            limits:
-              memory: 0.4G
-              cpu: 0.2
-            requests:
-              memory: 0.4G
-              cpu: 0.2
-          volumeMounts:       
-          - name: lighttpd
-            mountPath: /srv/lighttpd
-          - name: socket
-            mountPath: /tmp
-            readOnly: false            
+            - name: mapproxy
+              mountPath: /srv/mapproxy/config/mapproxy.yaml
+              subPath: mapproxy.yaml
+            - name: lighttpd
+              mountPath: /srv/mapproxy/config/include.conf
+              subPath: include.conf
+            - name: lighttpd
+              mountPath: /srv/mapproxy/config/lighttpd.auth
+              subPath: lighttpd.auth
         - name: apache-exporter
           image: lusotycoon/apache-exporter:v0.7.0
           imagePullPolicy: Always
           args: ["-scrape_uri=http://$(AUTH)@localhost/server-status?auto"]
           ports:
-          - containerPort: 9117
+            - containerPort: 9117
           env:
-          - name: AUTH
-            valueFrom:
-              configMapKeyRef:
-                name: lighttpd-config
-                key: lighttpd.auth          
+            - name: AUTH
+              valueFrom:
+                configMapKeyRef:
+                  name: lighttpd-config
+                  key: lighttpd.auth
       volumes:
-        - name: socket
-          emptyDir: {}
         - name: mapproxy
           projected:
             sources:
-            - configMap:
-                name: mapproxy-config
+              - configMap:
+                  name: mapproxy-config
         - name: lighttpd
           projected:
             sources:
-            - configMap:
-                name: lighttpd-config
+              - configMap:
+                  name: lighttpd-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lighttpd-config
+data:
+  lighttpd.auth: admin:admin
+  include.conf: |-
+    server.modules += ( "mod_auth" )
+    server.modules += ( "mod_status" )
+
+    status.status-url = "/server-status"
+    auth.backend = "plain"
+    auth.backend.plain.userfile = "/srv/mapproxy/config/lighttpd.auth"
+
+    $HTTP["url"] =~ "^/server-status" {
+      auth.require = ( "" =>
+      (
+        "method" => "basic",
+        "realm" => "Protected Monitoring Area",
+        "require" => "user=admin"
+      )
+    )
+    }
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mapproxy-config
 data:
-  config.py: |-
-    # WSGI module for use with Apache mod_wsgi or gunicorn
-
-    # # uncomment the following lines for logging
-    # # create a log.ini with `mapproxy-util create -t log-ini`
-    # from logging.config import fileConfig
-    # import os.path
-    # fileConfig(r'/usr/local/mapproxy/log.ini', {'here': os.path.dirname(__file__)})
-    from logging.config import fileConfig
-    import os.path
-    fileConfig(r'/srv/mapproxy/config/log.ini', {'here': os.path.dirname(__file__)})
-
-    from mapproxy.wsgiapp import make_wsgi_app
-    application = make_wsgi_app(r'/srv/mapproxy/config/mapproxy.yaml', reloader=True)
-  log.ini: |-
-    [loggers]
-    keys=root,source_requests
-
-    [handlers]
-    keys=mapproxy,source_requests
-
-    [formatters]
-    keys=default,requests
-
-    [logger_root]
-    level=INFO
-    handlers=mapproxy
-
-    [logger_source_requests]
-    level=INFO
-    qualname=mapproxy.source.request
-    propagate=0
-    handlers=source_requests
-
-    [handler_mapproxy]
-    class=StreamHandler
-    formatter=default
-
-    [handler_source_requests]
-    class=StreamHandler
-    formatter=requests
-
-    [formatter_default]
-    format=%(asctime)s - %(levelname)s - %(name)s - %(message)s
-
-    [formatter_requests]
-    format=[%(asctime)s] %(message)s
   mapproxy.yaml: |-
     # -------------------------------
     # MapProxy configuration.
@@ -190,70 +143,6 @@ data:
       image:
           resampling_method: bilinear
           jpeg_quality: 90
-  uwsgi.ini: |-
-    [uwsgi]
-    chdir = $(UWSGI_CHDIR)
-    pyargv = $(UWSGI_PYARGV)
-    wsgi-file = $(UWSGI_WSGI_FILE)
-    pidfile = /tmp/mapproxy.pid
-    socket = /tmp/mapproxy-scgi.socket
-    chmod-socket = 644
-    processes = $(UWSGI_PROCESSES)
-    threads = $(UWSGI_THREADS)
-    uid=1337
-    gid=1337
-    wsgi-disable-file-wrapper=true
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: lighttpd-config
-data:
-  lighttpd.auth: admin:admin
-  lighttpd.conf: |-
-    server.document-root = "/"
-    server.port = 80
-
-    server.modules += ( "mod_setenv" )
-    server.modules += ( "mod_fastcgi" )
-    server.modules += ( "mod_accesslog" )
-    server.modules += ( "mod_rewrite" )
-    server.modules += ( "mod_scgi" )
-    server.modules += ( "mod_auth" )
-    server.modules += ( "mod_status" )
-
-    server.errorlog = "/dev/stderr"
-    accesslog.filename = "/dev/stderr"
-
-    scgi.debug = env.DEBUG
-    scgi.protocol = "uwsgi"
-
-    status.status-url = "/server-status"
-    auth.backend = "plain"
-    auth.backend.plain.userfile = "/srv/lighttpd/lighttpd.auth"
-
-    $HTTP["url"] =~ "^/server-status" {
-       auth.require = ( "" =>
-       (
-         "method" => "basic",
-         "realm" => "Protected Monitoring Area",
-         "require" => "user=admin"
-       )
-     )
-    }
-
-    scgi.server = (
-      "/mapproxy" => (
-        "mapproxy" => (
-          "socket" => "/tmp/mapproxy-scgi.socket",
-          "check-local" => "disable",
-          "min-procs" => env.MIN_PROCS,
-          "max-procs" => env.MAX_PROCS,
-          "max-load-per-proc" => env.MAX_LOAD_PER_PROC,
-          "idle-timeout" => env.IDLE_TIMEOUT
-        )
-      )
-    )
 ---
 apiVersion: v1
 kind: Service
@@ -263,11 +152,11 @@ metadata:
     service: mapproxy-example
 spec:
   ports:
-  - port: 9117
-    protocol: TCP  
-    name: apache-exporter
-  - port: 80
-    protocol: TCP
-    name: lighttpd
+    - port: 9117
+      protocol: TCP  
+      name: apache-exporter
+    - port: 80
+      protocol: TCP
+      name: mapproxy
   selector:
     app: mapproxy-example
