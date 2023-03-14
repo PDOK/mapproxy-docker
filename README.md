@@ -8,7 +8,7 @@
 
 ```docker
 docker build -t pdok/mapproxy .
-docker run --rm -d -p 80:80 --name mapproxy-example -v `pwd`/examples/config/mapproxy.yaml:/srv/mapproxy/config/mapproxy.yaml pdok/mapproxy
+docker run --rm -d -p 8080:80 --name mapproxy-example -v `pwd`/examples/config/mapproxy.yaml:/srv/mapproxy/config/mapproxy.yaml pdok/mapproxy
 
 docker stop mapproxy-example
 ```
@@ -47,7 +47,7 @@ docker run -d -p 80:80 --name mapproxy-example -v `pwd`/examples/config/mapproxy
 ```
 
 Running the example above will start a empty mapproxy. On the url
-<http://localhost/demo> the test page can be accessed. Replacing the example
+<http://localhost:8080/mapproxy/demo> the test page can be accessed. Replacing the example
 mapproxy.yaml with your own will start a mapproxy with that configuration.
 
 This docker image uses lighttpd as a proxy. It's possible to add additional
