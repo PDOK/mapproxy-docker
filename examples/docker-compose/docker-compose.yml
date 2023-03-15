@@ -10,16 +10,15 @@ services:
     volumes:
       - ./../config/mapproxy.yaml:/srv/mapproxy/config/mapproxy.yaml
       - ./../config/include.conf:/srv/mapproxy/config/include.conf
-      - ./../config/lighttpd.auth:/srv/mapproxy/config/lighttpd.auth
     networks:
       mapproxy-exporter:
   exporter:
     image: lusotycoon/apache-exporter:v0.7.0
     restart: unless-stopped
-    command: ["-scrape_uri=http://admin:admin@mapproxy/server-status?auto"]
+    command: ["-scrape_uri=http://mapproxy/server-status?auto"]
     ports:
       - 9117:9117
     networks:
-      mapproxy-exporter:     
+      mapproxy-exporter:
 networks:
   mapproxy-exporter:
