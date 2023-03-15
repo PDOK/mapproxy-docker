@@ -66,7 +66,7 @@ data:
   include.conf: |-
     server.modules += ( "mod_status" )
     
-    $HTTP["remoteip"] =~ "127.0.0.1|172\.|10\.|192.168\." {
+    $HTTP["remoteip"] =~ "^(127\.0\.0\.1|172\.(1[6-9]|2[0-9]|3[01])\.|10\.|192\.168\.)" {
       status.status-url = "/server-status"
     }
 ---
