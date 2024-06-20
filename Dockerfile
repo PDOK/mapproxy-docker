@@ -18,7 +18,8 @@ RUN apt-get -y update \
                libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install flup Numpy PyYAML boto3 Pillow requests Shapely eventlet gunicorn uwsgi prometheus_client lxml azure-storage-blob pyproj==2.2.0
+COPY requirements.txt requirements.txt
+RUN pip3 install --requirement requirements.txt
 # use the PDOK fork of MapProxy. This is MapProxy version 1.13.1 but patched with https://github.com/mapproxy/mapproxy/pull/608
 RUN pip3 install git+https://github.com/PDOK/mapproxy.git@pdok-1.13.2-patched-2
 
