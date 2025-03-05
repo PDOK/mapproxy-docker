@@ -9,6 +9,6 @@ eventlet
 gunicorn
 uwsgi
 prometheus_client
-lxml==5.0.2
+lxml>=5.0.2
 azure-storage-blob
-pyproj==2.2.0
+pyproj>=2.2.0
