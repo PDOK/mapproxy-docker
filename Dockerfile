@@ -3,9 +3,13 @@ LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 USER root
 
+# wget is required for startup probe in mapproxy-operator
+# git is required for git cloning mapproxy in this Dockerfile
+# all other dependencies are required to build mapproxy
 RUN apt update && apt -y install --no-install-recommends \
   gcc \
   git \
+  wget \
   python3-pip \
   python3-dev \
   python3-pil \
