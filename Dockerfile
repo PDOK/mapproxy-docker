@@ -6,7 +6,7 @@ USER root
 # wget is required for startup probe in mapproxy-operator
 # git is required for git cloning mapproxy in this Dockerfile
 # all other dependencies are required to build mapproxy
-RUN apt update && apt -y install --no-install-recommends \
+RUN apt-get update && apt-get -y install --no-install-recommends \
   gcc \
   git \
   wget \
@@ -25,11 +25,9 @@ COPY requirements.txt requirements.txt
 RUN pip install -v --break-system-packages --requirement requirements.txt
 RUN pip install -v --break-system-packages git+https://github.com/mapproxy/mapproxy.git@3.1.3
 
-RUN apt-get clean
-
 # default dir needed for the cache_data
-RUN mkdir -p /srv/mapproxy/cache_data
-RUN chmod a+rwx /srv/mapproxy/cache_data
+RUN mkdir -p /srv/mapproxy/cache_data && \
+    chmod a+rwx /srv/mapproxy/cache_data
 
 WORKDIR /srv/mapproxy
 
