@@ -1,29 +1,29 @@
-FROM pdok/lighttpd:1.4.67-bookworm
+FROM pdok/lighttpd:1.4.85-trixie
 LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 USER root
 
 # wget is required for startup probe in mapproxy-operator
-# git is required for git cloning mapproxy in this Dockerfile
-# all other dependencies are required to build mapproxy
+# git is required for pip installing mapproxy from git in this Dockerfile
+# gcc and python3-dev are required to build uwsgi from source (no wheel available)
+# libgdal36 is loaded at runtime by mapproxy (ctypes) for ogr_datasource coverages
+# all other dependencies (including GEOS, libxml2, PROJ and Pillow's libraries) are bundled in their wheels
 RUN apt-get update && apt-get -y install --no-install-recommends \
   gcc \
   git \
   wget \
   python3-pip \
   python3-dev \
-  python3-pil \
-  libgeos-dev \
-  libgdal-dev \
-  libxml2-dev \
-  libxslt-dev && \
+  libgdal36 && \
   apt-get -y --purge autoremove && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt requirements.txt
 RUN pip install -v --break-system-packages --requirement requirements.txt
-RUN pip install -v --break-system-packages git+https://github.com/mapproxy/mapproxy.git@3.1.3
+# using patched version until PR is merged upstream
+# RUN pip install -v --break-system-packages git+https://github.com/mapproxy/mapproxy.git@8.1.0
+RUN pip install -v --break-system-packages git+https://github.com/PDOK/mapproxy.git@168e51f9e87904178f88caf8b967fafe22fe8f92
 
 # default dir needed for the cache_data
 RUN mkdir -p /srv/mapproxy/cache_data && \
