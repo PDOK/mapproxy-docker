@@ -1,14 +1,17 @@
-flup
+flup==1.0.3
+PyYAML==6.0.3
+Pillow==13.0.0
+requests==2.34.2
+Shapely==2.2.0
+lxml==6.1.3
+pyproj==3.8.0
+boto3==1.44.0
+azure-storage-blob==12.31.1
+
+# The packages below do not seem to be necessary (not used by MapProxy, the
+# FastCGI/flup setup or the operator-generated config), but are kept for now.
 Numpy
-PyYAML
-boto3
-Pillow
-requests
-Shapely
 eventlet
 gunicorn
 uwsgi
 prometheus_client
-lxml>=5.0.2
-azure-storage-blob
-pyproj>=2.2.0
