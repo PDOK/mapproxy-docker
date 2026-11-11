@@ -21,7 +21,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 
 COPY requirements.txt requirements.txt
 RUN pip install -v --break-system-packages --requirement requirements.txt
-# using patched version until PR is merged upstream
+# using patched version until PR is merged upstream (https://github.com/mapproxy/mapproxy/pull/1556)
 # RUN pip install -v --break-system-packages git+https://github.com/mapproxy/mapproxy.git@8.1.0
 RUN pip install -v --break-system-packages git+https://github.com/PDOK/mapproxy.git@168e51f9e87904178f88caf8b967fafe22fe8f92
 
