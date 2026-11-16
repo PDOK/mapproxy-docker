@@ -8,7 +8,7 @@
 
 ```docker
 docker build -t pdok/mapproxy .
-docker run --rm -d -p 8080:80 --name mapproxy-example -v `pwd`/examples/config/mapproxy.yaml:/srv/mapproxy/config/mapproxy.yaml pdok/mapproxy
+docker run --rm -d -p 8080:80 --name mapproxy-example -v "$PWD/examples/config/mapproxy.yaml:/srv/mapproxy/config/mapproxy.yaml" pdok/mapproxy
 
 docker stop mapproxy-example
 ```
@@ -43,7 +43,7 @@ This image can be run straight from the commandline. The mapproxy config file
 needs to be mounted on the container path `/srv/mapproxy/config/mapproxy.yaml`.
 
 ```docker
-docker run -d -p 80:80 --name mapproxy-example -v `pwd`/examples/config/mapproxy.yaml:/srv/mapproxy/config/mapproxy.yaml pdok/mapproxy
+docker run -d -p 80:80 --name mapproxy-example -v "$PWD/examples/config/mapproxy.yaml:/srv/mapproxy/config/mapproxy.yaml" pdok/mapproxy
 ```
 
 Running the example above will start a empty mapproxy. On the url
